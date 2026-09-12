@@ -4,13 +4,11 @@
 
 관리 화면, nginx, 데이터베이스가 **하나의 Docker 이미지**에 들어 있습니다. 별도의 nginx·데이터베이스 설치는 필요하지 않습니다. 필요한 설정 파일은 아래 내용을 복사해 직접 만듭니다.
 
-이 설치 안내는 [공개 설치 저장소](https://github.com/xelexis-dev/nginx-web-ui-deploy)에서 **GitHub 로그인 없이** 읽을 수 있습니다. 제품 소스 저장소는 비공개이지만 설치에는 접근 권한이 필요하지 않습니다. **Nexus 이미지도 anonymous(익명) 다운로드를 지원하므로 `docker login`, 계정, 비밀번호, 토큰 없이 받을 수 있습니다.**
-
 ## 1. 설치 준비와 이미지 선택
 
 - Linux 컨테이너를 실행할 수 있는 Docker가 필요합니다. Linux에서는 Docker Engine과 Compose 플러그인을, Windows/macOS에서는 Linux 컨테이너 모드의 Docker Desktop을 사용할 수 있습니다. [Docker·Compose 설치 안내](https://docs.docker.com/compose/install/)
-- 이미지 주소는 `nexus.xelexis.com/nginx-web-ui`이며, **다운로드에 레지스트리 로그인이나 토큰이 필요하지 않습니다.**
-- 아래 예제는 게시된 **1.17.1** 버전을 기준으로 합니다. 그대로 설치할 때는 다른 문서를 열 필요가 없습니다. 새 버전 설치 안내도 이 문서에 반영됩니다.
+- 이미지 주소는 `nexus.xelexis.com/nginx-web-ui`입니다.
+- 아래 예제는 **1.17.1** 버전을 기준으로 합니다.
 
 다음 명령으로 Docker 연결, Compose 설치, **컨테이너를 실행할 Docker 서버의 아키텍처**를 확인합니다. 원격 Docker context를 사용한다면 명령을 입력하는 PC와 실행 대상이 다를 수 있습니다.
 
@@ -39,7 +37,7 @@ mkdir nginx-web-ui
 cd nginx-web-ui
 ```
 
-이 폴더에 **`compose.yaml`** 파일을 만들고 다음 내용을 그대로 저장합니다. 저장소를 내려받거나 다른 Compose 파일을 복사할 필요가 없습니다. **ARM64라면 `image`의 태그를 `1.17.1-arm64`로 바꾼 뒤 실행하세요.**
+이 폴더에 **`compose.yaml`** 파일을 만들고 다음 내용을 그대로 저장합니다. **ARM64라면 `image`의 태그를 `1.17.1-arm64`로 바꾼 뒤 실행하세요.**
 
 ```yaml
 services:
@@ -201,7 +199,7 @@ docker compose -f compose.yaml start
 | Docker에 연결할 수 없음 | Docker 서비스 실행 여부, 현재 context, Docker 명령 실행 권한 확인 |
 | `port is already allocated` | 호스트에서 해당 포트를 쓰는 서비스 확인. 관리 포트는 호스트 쪽 숫자를 변경. 기존 서비스를 임의로 중지하지 않음 |
 | 아키텍처 불일치·`exec format error` | `docker info` 결과와 이미지 태그 비교. ARM64는 `-arm64` 사용 |
-| 이미지 다운로드 실패 | 이미지 주소와 버전 태그, 네트워크·DNS·레지스트리 HTTPS 연결 확인. 익명 다운로드이므로 설치용 토큰 불필요 |
+| 이미지 다운로드 실패 | 이미지 주소와 버전 태그, 네트워크·DNS·레지스트리 HTTPS 연결 확인 |
 | 컨테이너는 실행 중인데 관리 화면에 접속 불가 | `docker logs --tail=100 nginx-web-ui`, `nginx -t`, `pg_isready` 결과와 호스트 포트·방화벽 확인 |
 | 새 설치인데 `/setup`이 나오지 않음 | 기존 DB 볼륨 또는 `ADMIN_PASSWORD`로 계정이 이미 생성됐는지 확인 |
 | 프록시가 502를 반환 | 업스트림 주소·포트와 Docker 네트워크 확인. `localhost`가 대상 서버를 가리키는지 재확인 |
