@@ -9,6 +9,7 @@
 - Linux 컨테이너를 실행할 수 있는 Docker가 필요합니다. Linux에서는 Docker Engine과 Compose 플러그인을, Windows/macOS에서는 Linux 컨테이너 모드의 Docker Desktop을 사용할 수 있습니다. [Docker·Compose 설치 안내](https://docs.docker.com/compose/install/)
 - 이미지 주소는 `nexus.xelexis.com/nginx-web-ui`입니다.
 - 아래 예제는 **1.17.1** 버전을 기준으로 합니다.
+- 새 버전과 변경 내용은 [릴리스](https://github.com/xelexis-dev/nginx-web-ui-deploy/releases)에서 확인할 수 있습니다.
 
 다음 명령으로 Docker 연결, Compose 설치, **컨테이너를 실행할 Docker 서버의 아키텍처**를 확인합니다. 원격 Docker context를 사용한다면 명령을 입력하는 PC와 실행 대상이 다를 수 있습니다.
 
