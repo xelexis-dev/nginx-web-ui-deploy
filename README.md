@@ -8,7 +8,7 @@
 
 - Linux 컨테이너를 실행할 수 있는 Docker가 필요합니다. Linux에서는 Docker Engine과 Compose 플러그인을, Windows/macOS에서는 Linux 컨테이너 모드의 Docker Desktop을 사용할 수 있습니다. [Docker·Compose 설치 안내](https://docs.docker.com/compose/install/)
 - 이미지 주소는 `nexus.xelexis.com/nginx-web-ui`입니다.
-- 아래 예제는 **1.17.1** 버전을 기준으로 합니다.
+- 아래 예제는 **1.17.2** 버전을 기준으로 합니다.
 - 새 버전과 변경 내용은 [릴리스](https://github.com/xelexis-dev/nginx-web-ui-deploy/releases)에서 확인할 수 있습니다.
 
 다음 명령으로 Docker 연결, Compose 설치, **컨테이너를 실행할 Docker 서버의 아키텍처**를 확인합니다. 원격 Docker context를 사용한다면 명령을 입력하는 PC와 실행 대상이 다를 수 있습니다.
@@ -22,8 +22,8 @@ docker info --format '{{.OSType}}/{{.Architecture}}'
 
 | Docker 서버 | 사용할 이미지 |
 | --- | --- |
-| `linux/x86_64` 또는 `linux/amd64` | `nexus.xelexis.com/nginx-web-ui:1.17.1` |
-| `linux/aarch64` 또는 `linux/arm64` | `nexus.xelexis.com/nginx-web-ui:1.17.1-arm64` |
+| `linux/x86_64` 또는 `linux/amd64` | `nexus.xelexis.com/nginx-web-ui:1.17.2` |
+| `linux/aarch64` 또는 `linux/arm64` | `nexus.xelexis.com/nginx-web-ui:1.17.2-arm64` |
 
 `latest`와 접미사 없는 버전 태그는 **AMD64 전용**입니다. ARM64 환경에서는 반드시 `-arm64` 태그를 선택하세요. 아키텍처가 자동으로 선택되는 공통 태그가 아닙니다.
 
@@ -38,12 +38,12 @@ mkdir nginx-web-ui
 cd nginx-web-ui
 ```
 
-이 폴더에 **`compose.yaml`** 파일을 만들고 다음 내용을 그대로 저장합니다. **ARM64라면 `image`의 태그를 `1.17.1-arm64`로 바꾼 뒤 실행하세요.**
+이 폴더에 **`compose.yaml`** 파일을 만들고 다음 내용을 그대로 저장합니다. **ARM64라면 `image`의 태그를 `1.17.2-arm64`로 바꾼 뒤 실행하세요.**
 
 ```yaml
 services:
   nginx-web-ui:
-    image: nexus.xelexis.com/nginx-web-ui:1.17.1
+    image: nexus.xelexis.com/nginx-web-ui:1.17.2
     container_name: nginx-web-ui
     restart: unless-stopped
     ports:
