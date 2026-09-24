@@ -8,7 +8,7 @@
 
 - Linux 컨테이너를 실행할 수 있는 Docker가 필요합니다. Linux에서는 Docker Engine과 Compose 플러그인을, Windows/macOS에서는 Linux 컨테이너 모드의 Docker Desktop을 사용할 수 있습니다. [Docker·Compose 설치 안내](https://docs.docker.com/compose/install/)
 - 이미지 주소는 `nexus.xelexis.com/nginx-web-ui`입니다.
-- 아래 예제는 **1.17.2** 버전을 기준으로 합니다.
+- 아래 예제는 **1.18.0** 버전을 기준으로 합니다.
 - 새 버전과 변경 내용은 [릴리스](https://github.com/xelexis-dev/nginx-web-ui-deploy/releases)에서 확인할 수 있습니다.
 
 다음 명령으로 Docker 연결, Compose 설치, **컨테이너를 실행할 Docker 서버의 아키텍처**를 확인합니다. 원격 Docker context를 사용한다면 명령을 입력하는 PC와 실행 대상이 다를 수 있습니다.
@@ -22,8 +22,8 @@ docker info --format '{{.OSType}}/{{.Architecture}}'
 
 | Docker 서버 | 사용할 이미지 |
 | --- | --- |
-| `linux/x86_64` 또는 `linux/amd64` | `nexus.xelexis.com/nginx-web-ui:1.17.2` |
-| `linux/aarch64` 또는 `linux/arm64` | `nexus.xelexis.com/nginx-web-ui:1.17.2-arm64` |
+| `linux/x86_64` 또는 `linux/amd64` | `nexus.xelexis.com/nginx-web-ui:1.18.0` |
+| `linux/aarch64` 또는 `linux/arm64` | `nexus.xelexis.com/nginx-web-ui:1.18.0-arm64` |
 
 `latest`와 접미사 없는 버전 태그는 **AMD64 전용**입니다. ARM64 환경에서는 반드시 `-arm64` 태그를 선택하세요. 아키텍처가 자동으로 선택되는 공통 태그가 아닙니다.
 
@@ -38,12 +38,12 @@ mkdir nginx-web-ui
 cd nginx-web-ui
 ```
 
-이 폴더에 **`compose.yaml`** 파일을 만들고 다음 내용을 그대로 저장합니다. **ARM64라면 `image`의 태그를 `1.17.2-arm64`로 바꾼 뒤 실행하세요.**
+이 폴더에 **`compose.yaml`** 파일을 만들고 다음 내용을 그대로 저장합니다. **ARM64라면 `image`의 태그를 `1.18.0-arm64`로 바꾼 뒤 실행하세요.**
 
 ```yaml
 services:
   nginx-web-ui:
-    image: nexus.xelexis.com/nginx-web-ui:1.17.2
+    image: nexus.xelexis.com/nginx-web-ui:1.18.0
     container_name: nginx-web-ui
     restart: unless-stopped
     ports:
@@ -93,7 +93,7 @@ docker compose -f compose.yaml up -d
 
 관리 포트가 이미 사용 중이면 `"8080:8080"`을 `"18080:8080"`으로 바꾸고 `http://localhost:18080`을 사용합니다. 설치한 컴퓨터에서만 관리 화면에 접근하려면 `"127.0.0.1:8080:8080"`으로 설정할 수 있습니다. 최초 관리자 생성 전에는 관리 포트에 설치 담당자만 접근할 수 있게 하세요.
 
-내부 웹 서버 `3000/tcp`와 PostgreSQL `5432/tcp`는 별도로 공개하지 않습니다. 컨테이너의 기본 포트와 내부 프로세스 설정은 그대로 사용하세요.
+내부 웹 서버 `3000/tcp`, API 서버 `3001/tcp`, PostgreSQL `5432/tcp`는 별도로 공개하지 않습니다. 컨테이너의 기본 포트와 내부 프로세스 설정은 그대로 사용하세요.
 
 ### 영구 보관되는 데이터
 
@@ -137,6 +137,8 @@ ADMIN_PASSWORD='REPLACE_WITH_YOUR_UNIQUE_PASSWORD_123'
 이후 위의 `pull`·`up -d` 명령을 실행합니다. 빈 DB이면 계정이 생성되고 `/setup` 대신 로그인 화면을 사용합니다. 기존 사용자가 있으면 이 환경변수로 비밀번호가 변경되지 않습니다.
 
 기본 설치에는 이외의 환경변수가 필요하지 않습니다. `AUTH_SECRET`과 내장 DB 접속 비밀값은 최초 부팅 시 생성되어 앱 볼륨에 보관됩니다. `DATABASE_URL`을 별도로 지정하거나 외부 DB를 준비하지 마세요.
+
+관리 화면을 외부 리버스 프록시 뒤의 HTTPS 도메인으로만 쓰거나 OAuth(OIDC) 로그인을 쓴다면, 선택적으로 `AUTH_URL`에 그 주소(예: `https://admin.example.com`)를 지정할 수 있습니다. 지정하면 로그인과 설정 변경 요청을 그 주소에서 온 것만 받습니다.
 
 ## 4. 설치 성공 확인
 
