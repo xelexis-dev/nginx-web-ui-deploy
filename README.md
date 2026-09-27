@@ -1,8 +1,8 @@
 # nginx-web-ui
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/xelexis-dev/nginx-web-ui-deploy/releases/download/v1.19.5/nginx-web-ui-logo-dark.png">
-  <img alt="nginx-web-ui" src="https://github.com/xelexis-dev/nginx-web-ui-deploy/releases/download/v1.19.5/nginx-web-ui-logo-light.png" width="400">
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/xelexis-dev/nginx-web-ui-deploy/releases/download/v1.19.6/nginx-web-ui-logo-dark.png">
+  <img alt="nginx-web-ui" src="https://github.com/xelexis-dev/nginx-web-ui-deploy/releases/download/v1.19.6/nginx-web-ui-logo-light.png" width="400">
 </picture>
 
 **nginx-web-ui는 nginx를 웹 화면에서 관리하는 도구입니다.** nginx 설정 파일을 직접 편집하지 않고 리버스 프록시(HTTP/HTTPS), TCP/UDP 프록시, 인증서, 캐시와 gzip 압축을 설정할 수 있습니다. 사용자 권한 관리, 변경 이력과 복원, 로그 조회, 여러 노드 관리도 제공합니다.
@@ -13,7 +13,7 @@
 
 - Linux 컨테이너를 실행할 수 있는 Docker가 필요합니다. Linux에서는 Docker Engine과 Compose 플러그인을, Windows/macOS에서는 Linux 컨테이너 모드의 Docker Desktop을 사용할 수 있습니다. [Docker·Compose 설치 안내](https://docs.docker.com/compose/install/)
 - 이미지 주소는 `ghcr.io/xelexis-dev/nginx-web-ui`입니다.
-- 아래 예제는 **1.19.5** 버전을 기준으로 합니다.
+- 아래 예제는 **1.19.6** 버전을 기준으로 합니다.
 - 새 버전과 변경 내용은 [릴리스](https://github.com/xelexis-dev/nginx-web-ui-deploy/releases)에서 확인할 수 있습니다.
 
 다음 명령으로 Docker 연결, Compose 설치, **컨테이너를 실행할 Docker 서버의 아키텍처**를 확인합니다. 원격 Docker context를 사용한다면 명령을 입력하는 PC와 실행 대상이 다를 수 있습니다.
@@ -27,8 +27,8 @@ docker info --format '{{.OSType}}/{{.Architecture}}'
 
 | Docker 서버 | 사용할 이미지 |
 | --- | --- |
-| `linux/x86_64` 또는 `linux/amd64` | `ghcr.io/xelexis-dev/nginx-web-ui:1.19.5` |
-| `linux/aarch64` 또는 `linux/arm64` | `ghcr.io/xelexis-dev/nginx-web-ui:1.19.5-arm64` |
+| `linux/x86_64` 또는 `linux/amd64` | `ghcr.io/xelexis-dev/nginx-web-ui:1.19.6` |
+| `linux/aarch64` 또는 `linux/arm64` | `ghcr.io/xelexis-dev/nginx-web-ui:1.19.6-arm64` |
 
 `latest`와 접미사 없는 버전 태그는 **AMD64 전용**입니다. ARM64 환경에서는 반드시 `-arm64` 태그를 선택하세요. 아키텍처가 자동으로 선택되는 공통 태그가 아닙니다.
 
@@ -43,12 +43,12 @@ mkdir nginx-web-ui
 cd nginx-web-ui
 ```
 
-이 폴더에 **`compose.yaml`** 파일을 만들고 다음 내용을 그대로 저장합니다. **ARM64라면 `image`의 태그를 `1.19.5-arm64`로 바꾼 뒤 실행하세요.**
+이 폴더에 **`compose.yaml`** 파일을 만들고 다음 내용을 그대로 저장합니다. **ARM64라면 `image`의 태그를 `1.19.6-arm64`로 바꾼 뒤 실행하세요.**
 
 ```yaml
 services:
   nginx-web-ui:
-    image: ghcr.io/xelexis-dev/nginx-web-ui:1.19.5
+    image: ghcr.io/xelexis-dev/nginx-web-ui:1.19.6
     container_name: nginx-web-ui
     restart: unless-stopped
     ports:
@@ -82,7 +82,7 @@ docker compose -f compose.yaml pull
 docker compose -f compose.yaml up -d
 ```
 
-볼륨은 없으면 자동으로 생성됩니다. Windows/macOS에서도 이 예제의 Docker 관리 볼륨을 그대로 사용하세요. 특히 데이터베이스 경로를 호스트 폴더로 바꾸면 파일 권한 문제로 시작하지 못할 수 있습니다.
+볼륨은 없으면 자동으로 생성됩니다. Docker 관리 볼륨은 Linux·Windows·macOS에서 사용할 수 있습니다. macOS에서 호스트 폴더를 사용하려면 아래 안내를 따르세요. Windows 호스트 폴더의 DB 권한 동작은 검증하지 않았으므로 관리 볼륨을 사용하세요.
 
 ### 포트와 접속 주소
 
@@ -110,6 +110,24 @@ docker compose -f compose.yaml up -d
 | `nwu-app-log` | `/var/log/nginx-web-ui` | 로그인 실패 등 앱 로그 |
 
 **`nwu-pg`와 `nwu-app`은 함께 보존하고 백업해야 합니다.** 앱 볼륨만 지우면 기존 DB에 접속하거나 암호화된 설정을 읽지 못할 수 있습니다. `/etc/nginx`, `conf.d`, `stream.d`에는 별도 볼륨을 덮어씌우지 마세요. nginx 설정은 저장된 논리 설정으로부터 앱이 생성하고 다시 적용합니다.
+
+### macOS Docker Desktop에서 호스트 폴더 사용
+
+1.19.6부터 macOS Docker Desktop의 공유 폴더에 DB를 저장한 뒤 컨테이너를 재생성·재시작할 때 소유권 때문에 DB가 시작하지 못하는 문제를 수정했습니다. Docker Desktop 4.90의 기본 파일 공유에서 확인했습니다. Linux의 호스트 폴더와 Docker 관리 볼륨도 계속 사용할 수 있습니다.
+
+호스트 폴더를 사용한다면 위 Compose 서비스의 `volumes`를 다음처럼 바꿉니다. `/absolute/path/nwui`는 실제 저장 경로로 바꾸고 Docker Desktop의 파일 공유에서 접근할 수 있게 합니다. 새 설치는 네 폴더를 먼저 만들고, 기존 설치는 기존 데이터가 있는 폴더를 연결하세요.
+
+```yaml
+    volumes:
+      - /absolute/path/nwui/postgres:/var/lib/postgresql/data
+      - /absolute/path/nwui/app:/var/lib/nginx-web-ui
+      - /absolute/path/nwui/nginx-log:/var/log/nginx
+      - /absolute/path/nwui/app-log:/var/log/nginx-web-ui
+```
+
+DB의 컨테이너 경로는 `/var/lib/postgresql/data`를 사용하며 `PGDATA` 환경변수는 별도로 설정하지 않습니다. 기존 보정 이미지가 `postgres/pgdata` 하위에 DB를 만들었다면 **`PG_VERSION` 파일이 있는 하위 폴더 자체**를 위 컨테이너 경로에 연결해야 합니다. [기존 보정 설치 이전 절차](UPGRADE_PATH.md#macos의-기존-보정-이미지에서-이전)를 먼저 확인하세요.
+
+소유권을 보정할 수 없으면 시작을 중단하고 `pg-init: FATAL: PostgreSQL data ownership`을 출력합니다. 공유 폴더의 쓰기 권한과 연결 경로를 확인하고, 데이터를 지우거나 새 빈 폴더로 바꾸지 마세요.
 
 ## 3. 최초 관리자 생성
 
