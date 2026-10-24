@@ -8,6 +8,12 @@ nginx-web-ui의 버전별 변경 사항입니다. 최신 버전이 맨 위에 �
 
 업데이트 절차와 확인 방법은 [설치 안내의 「업데이트와 중지」](https://github.com/xelexis-dev/nginx-web-ui-deploy/blob/main/README.md#6-업데이트와-중지)를, 반드시 거쳐야 하는 중간 버전은 [업그레이드 경로](https://github.com/xelexis-dev/nginx-web-ui-deploy/blob/main/UPGRADE_PATH.md)를 확인하세요. 업데이트 전에는 DB(`/var/lib/postgresql/data`)와 앱 데이터(`/var/lib/nginx-web-ui`) 볼륨을 함께 백업하세요.
 
+## v1.19.11
+
+- 사용하지 않는 패키지 관리 도구를 이미지에서 제거해 보안 업데이트가 필요한 구성요소를 줄였습니다.
+- 시간대 데이터를 2026e로 업데이트했습니다.
+- 데이터와 API는 바뀌지 않으며, 필수 경유 버전 없이 업데이트할 수 있습니다.
+
 ## v1.19.10
 
 - 내장 Node.js를 24.22.1, nginx를 1.30.6, PostgreSQL을 15.19로 업데이트하고 함께 사용하는 라이브러리의 보안 업데이트를 반영했습니다.
